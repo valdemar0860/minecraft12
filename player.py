@@ -47,6 +47,7 @@ class Player:
         base.accept('s', self.down)
         base.accept("escape", self.pause)
         base.accept("mouse1",self.spawn_block)
+        base.accept("mouse3",self.remove_block)
 
     def pause(self):
         self.panel.show()
@@ -64,8 +65,12 @@ class Player:
 
 
     def gravity(self, task):
-        self.player.setZ(self.player.getZ() - 1)
-
+        x,y,z = self.player.getPos()
+        if self.land.is_empty((x, y, z-1)):
+            self.player.setZ(self.player.getZ() - 1)
+        else:
+            print(z)
+        
         return task.cont
 
     def checkZ(self, task):
@@ -142,8 +147,14 @@ class Player:
 
     def spawn_block(self):
         x,y,z = self.player.getPos()
-        #print(self.player.getH())
         dX, dY =  self.get_block(self.player.getH()%360)
-        #print(x+dX, y+dY, z)
         if self.land.is_empty((x+dX, y+dY, z)):
-            self.land.create_block((x+dX, y+dY, z))
+            self.land.create_block((x + dX, y + dY, z))
+            
+    def remove_block(self):
+        x, y, z = self.player.getPos()
+        dX, dY =  self.get_block(self.player.getH() % 360)
+        if not self.land.is_empty((x + dX, y + dY, z)):
+            self.land.delete_block((x + dX, y + dY, z))
+            
+    

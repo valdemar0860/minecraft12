@@ -18,16 +18,21 @@ class Map:
         self.model.setPos(position)
         self.model.reparentTo(self.branch)
         self.model.setTag("at",str(position))
+        
     def create_branch(self):
         self.branch = render.attachNewNode('map_branch')
-
 
     def find_block(self, position):
         return self.branch.findAllMatches("=at="+str(position))
 
     def is_empty(self,position):
-        bloks = self.find_block(position)
-        if bloks:
+        blocks = self.find_block(position)
+        if blocks:
             return False
         else:
             return True
+
+    def delete_block(self, position):
+        blocks = self.find_block(position)
+        for block in blocks:
+            block.removeNode()
